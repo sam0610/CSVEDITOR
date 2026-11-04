@@ -7,6 +7,9 @@
 <meta name="apple-mobile-web-app-title" content="CSV 修改器">
 <meta name="theme-color" content="#EDF0F5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1217" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}[hidden]{display:none!important}</style>
 <title>CSV 修改器</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -124,6 +127,28 @@ td.more{height:46px;text-align:center;color:var(--muted);cursor:pointer;border-r
 td.more.idle{cursor:default}
 .kbsp{height:0}
 .editing .kbsp{height:40vh}
+.addc{min-width:46px;width:46px;padding:0}
+td.addc{background:var(--surface-2)}
+thead th.add{text-align:center}
+th.addrow{height:44px}
+td.addfill{height:44px;background:var(--surface-2)}
+.addbtn{display:flex;align-items:center;justify-content:center;width:100%;height:100%;min-height:38px;padding:0;border:0;background:none;color:var(--accent);font:500 22px/1 var(--font-ui);cursor:pointer}
+.addbtn:hover{background:var(--accent-tint)}
+.addbtn:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+
+/* start screen */
+.startscr{display:none;flex:1;min-height:0;align-items:center;justify-content:center}
+.app.start .startscr{display:flex}
+.app.start .bar,.app.start .tools,.app.start .find,.app.start .edit,.app.start .wrap{display:none}
+.startbox{width:100%;max-width:520px;display:flex;flex-direction:column;align-items:center;gap:28px}
+.sttitle{font-size:20px;font-weight:600;letter-spacing:.04em}
+.stbtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:100%}
+.bigbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:176px;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--accent);font-family:var(--font-ui);text-align:center;cursor:pointer}
+.bigbtn svg{width:56px;height:56px}
+.bigbtn .bt{font-size:18px;font-weight:600;color:var(--fg)}
+.bigbtn .bs{font-size:12px;color:var(--muted)}
+.bigbtn:hover{border-color:var(--accent)}
+.bigbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* sheet */
 .scrim{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;background:var(--scrim)}
@@ -157,12 +182,13 @@ pre.pv{margin:0;padding:10px 12px;max-width:100%;overflow-x:auto;background:var(
 </style>
 </head>
 <body>
+
 <div class="app" id="app">
   <h1 class="sr">CSV 修改器</h1>
 
   <header class="bar">
     <div class="file">
-      <div class="fname"><span class="t" id="fn"></span><span class="badge" id="bSample" hidden>範例</span><span class="badge warn" id="bDirty" hidden>未匯出</span></div>
+      <div class="fname"><span class="t" id="fn"></span><span class="badge warn" id="bDirty" hidden>未匯出</span></div>
       <div class="meta">
         <span id="mDim"></span><span>·</span>
         <span class="encw">
@@ -177,6 +203,7 @@ pre.pv{margin:0;padding:10px 12px;max-width:100%;overflow-x:auto;background:var(
         <span id="mDelim"></span>
       </div>
     </div>
+    <button class="btn" id="newBtn" type="button">新增</button>
     <label class="btn" id="openLbl">開啟<input class="sr" type="file" id="file" accept=".csv,.tsv,.txt,text/csv,text/plain,application/vnd.ms-excel"></label>
     <button class="btn primary" id="export" type="button">匯出</button>
   </header>
@@ -229,6 +256,23 @@ pre.pv{margin:0;padding:10px 12px;max-width:100%;overflow-x:auto;background:var(
     <div class="kbsp"></div>
   </div>
 
+  <section class="startscr" id="start" aria-label="開始">
+    <div class="startbox">
+      <svg width="88" height="88" viewBox="0 0 64 64" role="img" aria-label="CSV 修改器"><rect width="64" height="64" rx="15" fill="#F5A524"></rect><rect x="13" y="13" width="38" height="38" rx="7" fill="none" stroke="#17202C" stroke-opacity="0.35" stroke-width="2.4"></rect><circle cx="33" cy="27.5" r="6.2" fill="#17202C"></circle><path d="M33 33.5C33.6 40 30.5 44.4 24.5 46.4" fill="none" stroke="#17202C" stroke-width="6" stroke-linecap="round"></path></svg>
+      <div class="sttitle">CSV 修改器</div>
+      <div class="stbtns">
+        <button class="bigbtn" id="sNew" type="button">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="6" width="36" height="36" rx="7" fill="none" stroke="currentColor" stroke-width="3"></rect><path d="M6 18h36M6 30h36M18 6v36M30 6v36" fill="none" stroke="currentColor" stroke-width="2" opacity="0.4"></path><path d="M24 17v14M17 24h14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"></path></svg>
+          <span class="bt">新增</span><span class="bs">5 × 5 空白表格</span>
+        </button>
+        <label class="bigbtn" for="file">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 14a4 4 0 0 1 4-4h9l4 5h15a4 4 0 0 1 4 4v17a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path></svg>
+          <span class="bt">開啟</span><span class="bs">選擇 CSV 檔案</span>
+        </label>
+      </div>
+    </div>
+  </section>
+
   <div class="toast" id="toast" role="status" hidden></div>
 
   <div class="scrim" id="sheet" hidden>
@@ -277,18 +321,6 @@ var $=function(id){return document.getElementById(id);};
 var PAGE=400, MAX_UNDO=100, KEY='csv-xiugai-draft-v1';
 var DELIMS={comma:',',semi:';',tab:'\t'};
 var DELIM_NAME={',':'逗號分隔',';':'分號分隔','\t':'Tab 分隔'};
-var SAMPLE=[
-  '員工編號,姓名,日期,上班,下班,備註',
-  'E1021,陳大文,2026-11-02,08:02,17:31,',
-  'E1021,陳大文,2026-11-03,07:58,17:35,',
-  'E1021,陳大文,2026-11-04,08:04,,漏打下班咭',
-  'E1034,李小明,2026-11-02,08:15,17:30,遲到',
-  'E1034,李小明,2026-11-03,08:41,17:30,"補打卡, 主管已批"',
-  'E1034,李小明,2026-11-04,08:00,17:28,',
-  'E1047,黃美玲,2026-11-02,,,病假',
-  'E1047,黃美玲,2026-11-03,07:55,13:00,半日假',
-  'E1047,黃美玲,2026-11-04,07:57,17:33,'
-].join('\n');
 
 var app=$('app'), wrap=$('wrap'), tbl=$('tbl'), ed=$('ed'), sheet=$('sheet'), toastEl=$('toast');
 var S=null, undoSt=[], redoSt=[], cleanSet=new WeakSet();
@@ -386,9 +418,11 @@ function push(next,opts){
 }
 function openState(st){
   commitEdit();
-  undoSt.push(S);
-  if(undoSt.length>MAX_UNDO)undoSt.shift();
+  var fromStart=app.classList.contains('start');
+  if(fromStart)undoSt=[];
+  else{undoSt.push(S);if(undoSt.length>MAX_UNDO)undoSt.shift();}
   redoSt=[];
+  app.classList.remove('start');
   S=st;cleanSet.add(S);
   shown=PAGE;sel=startSel(st);
   afterChange();
@@ -431,7 +465,7 @@ function render(){
       h+='<th class="hd letter" data-c="'+c+'"><div class="c">'+colName(c)+'</div></th>';
     }
   }
-  h+='</tr></thead><tbody>';
+  h+='<th class="addc add" data-add="col"><button class="addbtn" type="button" aria-label="新增一欄">+</button></th></tr></thead><tbody>';
   var start=hdr?1:0,end=Math.min(rows.length,start+shown);
   for(var r=start;r<end;r++){
     var row=rows[r];
@@ -439,10 +473,13 @@ function render(){
     for(var k=0;k<nc;k++){
       h+='<td data-r="'+r+'" data-c="'+k+'"'+(matchSet.has(r*65536+k)?' class="m"':'')+'><div class="c">'+esc(disp(row[k]))+'</div></td>';
     }
-    h+='</tr>';
+    h+='<td class="addc"></td></tr>';
   }
-  if(end<rows.length)h+='<tr><td class="more" colspan="'+(nc+1)+'" data-more="1">還有 '+(rows.length-end)+' 列未顯示,點擊顯示更多</td></tr>';
-  else if(start>=rows.length)h+='<tr><td class="more idle" colspan="'+(nc+1)+'">沒有資料列。按「下方加列」新增。</td></tr>';
+  if(end<rows.length)h+='<tr><td class="more" colspan="'+(nc+2)+'" data-more="1">還有 '+(rows.length-end)+' 列未顯示,點擊顯示更多</td></tr>';
+  else{
+    if(start>=rows.length)h+='<tr><td class="more idle" colspan="'+(nc+2)+'">還沒有資料列。按下面的 + 新增。</td></tr>';
+    h+='<tr><th class="rn add addrow" data-add="row"><button class="addbtn" type="button" aria-label="新增一列">+</button></th><td class="addfill" colspan="'+(nc+1)+'"></td></tr>';
+  }
   h+='</tbody>';
   tbl.innerHTML=h;
   prevEls=[];
@@ -579,8 +616,10 @@ wrap.addEventListener('scroll',function(){if(editing()&&S.hasHeader&&sel.r===0)e
 tbl.addEventListener('click',function(e){
   var t=e.target.closest('th,td');
   if(!t||!tbl.contains(t))return;
+  if(t.dataset.add==='row'){appendRow();return;}
+  if(t.dataset.add==='col'){appendCol();return;}
   if(t.dataset.more){var keep=wrap.scrollTop;shown+=PAGE;render();wrap.scrollTop=keep;return;}
-  if(t.classList.contains('idle')||t.classList.contains('corner'))return;
+  if(t.classList.contains('idle')||t.classList.contains('corner')||t.classList.contains('addc')||t.classList.contains('addfill'))return;
   var r=t.dataset.r!==undefined?+t.dataset.r:sel.r;
   var c=t.dataset.c!==undefined?+t.dataset.c:sel.c;
   var editable=t.tagName==='TD'||(t.classList.contains('hd')&&t.dataset.r!==undefined);
@@ -641,6 +680,25 @@ function deleteCol(){
   push(Object.assign({},S,{rows:rows}));
   select(r0,Math.min(cc,rows[0].length-1));
   toast('已刪除 1 欄',true);
+}
+function appendRow(){
+  ed.blur();commitEdit();
+  var rows=S.rows.slice();
+  rows.push(new Array(rows[0].length).fill(''));
+  var r=rows.length-1,c=sel.c;
+  push(Object.assign({},S,{rows:rows}));
+  select(r,c,{noReveal:true});
+  var p=tbl.querySelector('th.addrow');
+  if(p)revealEl(p);
+}
+function appendCol(){
+  ed.blur();commitEdit();
+  var rows=S.rows.map(function(r){return r.concat('');});
+  var r=sel.r,c=rows[0].length-1;
+  push(Object.assign({},S,{rows:rows}));
+  select(r,c,{noReveal:true});
+  var p=tbl.querySelector('thead th.add');
+  if(p)revealEl(p);
 }
 $('tUndo').addEventListener('click',undo);
 $('tRedo').addEventListener('click',redo);
@@ -728,7 +786,6 @@ $('fAll').addEventListener('click',replaceAll);
 function updateUI(){
   var rows=S.rows,nc=rows[0].length,hdr=S.hasHeader;
   $('fn').textContent=S.name;
-  $('bSample').hidden=!S.sample;
   $('bDirty').hidden=cleanSet.has(S);
   $('mDim').textContent=(hdr?(rows.length-1)+' 列資料':rows.length+' 列')+' × '+nc+' 欄';
   $('encBtn').textContent='編碼 '+S.enc+' ▾';
@@ -771,6 +828,18 @@ function readFile(file){
     fr.readAsArrayBuffer(file);
   });
 }
+function blankState(){
+  var rows=[];
+  for(var i=0;i<5;i++)rows.push(new Array(5).fill(''));
+  return makeState(rows,{name:'未命名.csv',hasHeader:false,delim:',',eol:'\r\n',enc:'UTF-8',bom:true});
+}
+function newBlank(){
+  commitEdit();
+  openState(blankState());
+  toast('已新增 5 × 5 空白表格',true);
+}
+$('newBtn').addEventListener('click',newBlank);
+$('sNew').addEventListener('click',newBlank);
 function loadBuffer(buf,name,choice){
   var d=decodeBuf(buf,choice),delim=detectDelim(d.text);
   var rows=normalize(parseCSV(d.text,delim));
@@ -869,7 +938,7 @@ $('saveBtn').addEventListener('click',async function(){
   var name=finalName();
   try{
     await dl.save({filename:name,data:S.bom?'﻿'+text:text});
-    cleanSet.add(S);updateUI();
+    cleanSet.add(S);updateUI();scheduleSave();
     setStatus('已送出儲存:'+name);
   }catch(err){
     var code=err&&err.code;
@@ -906,6 +975,7 @@ function restoreDraft(){
     var raw=localStorage.getItem(KEY);
     if(!raw)return null;
     var o=JSON.parse(raw);
+    if(!o||o.sample||o.clean)return null;
     if(!o||!Array.isArray(o.rows)||!o.rows.length||!o.rows.every(function(r){return Array.isArray(r)&&r.every(function(v){return typeof v==='string';});}))return null;
     var st=makeState(normalize(o.rows),{
       hasHeader:o.hasHeader!==false,name:String(o.name||'未命名.csv'),
@@ -948,19 +1018,17 @@ function nativeSave(o){
 (function boot(){
   var st=restoreDraft(),restored=!!st;
   if(!st){
-    var rows=normalize(parseCSV(SAMPLE,','));
-    st=makeState(rows,{name:'範例_打咭記錄.csv',delim:',',eol:'\r\n',enc:'UTF-8',bom:true,hasHeader:true,sample:true});
-    cleanSet.add(st);
+    st=blankState();cleanSet.add(st);
+    app.classList.add('start');
   }
   S=st;sel=startSel(S);
   render();syncEditor();updateUI();
-  if(restored)toast('已還原上次編輯中的內容。');
+  if(restored)toast('已還原上次未匯出的內容。');
   var p=window.claude&&window.claude.use?window.claude.use('downloads'):null;
   if(p&&p.then)p.then(function(d){dl=d||null;}).catch(function(){dl=null;});
   else if(!window.claude)dl={save:nativeSave};
 })();
 })();
 </script>
-
 </body>
 </html>
