@@ -1501,7 +1501,7 @@ function reenc(val){
   loadBuffer(S.raw,S.name,val);
   toast('已用 '+S.enc+' 重新讀取',true);
 }
-var APP_VERSION='1.0.0',APP_BUILD='2026-11-04';
+var APP_VERSION='1.1.0',APP_BUILD='2026-11-04';
 function menuItems(name){
   if(name==='file'){
     var encs=[['自動偵測','auto'],['UTF-8','utf-8'],['Big5(繁體舊檔)','big5'],['GB18030(簡體舊檔)','gb18030']];
@@ -1712,6 +1712,17 @@ function nativeSave(o){
   var p=window.claude&&window.claude.use?window.claude.use('downloads'):null;
   if(p&&p.then)p.then(function(d){dl=d||null;}).catch(function(){dl=null;});
   else if(!window.claude)dl={save:nativeSave};
+  /* installed PWA: open CSV files handed over by the OS (file_handlers) */
+  if('launchQueue' in window&&window.launchQueue.setConsumer){
+    window.launchQueue.setConsumer(function(lp){
+      if(!lp||!lp.files||!lp.files.length)return;
+      var h=lp.files[0];
+      h.getFile().then(function(f){app.classList.remove('start');return openFile(f,h);}).catch(function(){toast('讀取不到這個檔案。');});
+    });
+  }
+  if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)&&!window.claude){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  }
 })();
 })();
 </script>

@@ -1,6 +1,8 @@
 {
+  "id": "./",
   "name": "CSV 修改器",
   "short_name": "CSV 修改器",
+  "description": "簡單易用的 CSV 編輯器,可直接開啟及儲存本機 CSV 檔案",
   "lang": "zh-Hant",
   "start_url": "./",
   "scope": "./",
@@ -9,6 +11,19 @@
   "theme_color": "#F5A524",
   "icons": [
     {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
-    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "file_handlers": [
+    {
+      "action": "./",
+      "name": "CSV 檔案",
+      "accept": {
+        "text/csv": [".csv"],
+        "text/tab-separated-values": [".tsv"],
+        "text/plain": [".txt"]
+      },
+      "launch_type": "single-client"
+    }
   ]
 }

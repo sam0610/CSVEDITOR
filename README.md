@@ -25,9 +25,18 @@
 - 匯出時可揀檔名、分隔符號(逗號、分號、Tab)和是否加入 BOM。
 - 編輯中、未匯出的內容會暫存在瀏覽器,重開頁面會還原。
 
+## 設為預設 CSV 程式(Windows / Mac,Chrome 或 Edge)
+
+1. 開 https://sam0610.github.io/CSVEDITOR/ ,網址列右邊按「安裝」圖示(或選單 → 安裝 CSV 修改器)。
+2. 喺檔案總管對任何 `.csv` 按右鍵 → 開啟方式 → 選擇其他應用程式 → 揀「CSV 修改器」,剔「一律使用」。
+3. 之後雙擊 CSV 就會直接用 CSV 修改器開,Ctrl+S 直接儲存返原檔。
+
+iPhone / iPad 嘅 Safari 唔支援 PWA 做預設開啟程式,只可以加入主畫面當 App 用,再用「開啟」揀檔案。
+
 ## 檔案
 
 - `index.html`:整個 App(單檔)
+- `sw.js`:離線快取
 - `favicon.svg`、`apple-touch-icon.png`、`icon-192.png`、`icon-512.png`、`manifest.webmanifest`:圖示與加入主畫面設定
 
 ## 發佈到 GitHub Pages
