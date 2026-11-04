@@ -800,18 +800,47 @@ tbl.addEventListener('click',function(e){
   select(r,c);
   if(dbl2)startEdit(false);
 });
-wrap.addEventListener('keydown',function(e){
-  if(e.target!==wrap)return;
+function navKey(e){
+  var k=e.key,nr=S.rows.length,nc=S.rows[0].length;
+  var ctl=e.ctrlKey||e.metaKey,dr=0,dc=0,tr=null,tc=null;
+  if(ctl&&!e.altKey&&(k==='a'||k==='A')){e.preventDefault();setRange(0,0,nr-1,nc-1);return true;}
+  if(k==='ArrowDown')dr=1;else if(k==='ArrowUp')dr=-1;else if(k==='ArrowLeft')dc=-1;else if(k==='ArrowRight')dc=1;
+  else if(k==='Home'){tc=0;if(ctl)tr=0;}
+  else if(k==='End'){tc=nc-1;if(ctl)tr=nr-1;}
+  else return false;
+  e.preventDefault();
+  var shift=e.shiftKey&&!colSel&&!rowSel;
+  var hr=sel.r,hc=sel.c;
+  if(shift&&rng){hr=(sel.r===rng.r1)?rng.r2:rng.r1;hc=(sel.c===rng.c1)?rng.c2:rng.c1;}
+  var base=shift?{r:hr,c:hc}:{r:sel.r,c:sel.c};
+  var nr2,nc2;
+  if(tr!==null||tc!==null){nr2=tr!==null?tr:base.r;nc2=tc!==null?tc:base.c;}
+  else if(ctl){
+    nr2=dr>0?nr-1:dr<0?0:base.r;
+    nc2=dc>0?nc-1:dc<0?0:base.c;
+  }else{nr2=base.r+dr;nc2=base.c+dc;}
+  nr2=Math.max(0,Math.min(nr-1,nr2));nc2=Math.max(0,Math.min(nc-1,nc2));
+  if(shift){
+    setRange(sel.r,sel.c,nr2,nc2);
+    var he=els(nr2,nc2).cell;if(he)revealEl(he);
+  }else select(nr2,nc2);
+  return true;
+}
+function setRangeShown(r){
+  var bi=S.hasHeader?r-1:r;
+  if(bi>=shown){shown=bi+Math.round(PAGE/2);render();}
+}
+document.addEventListener('keydown',function(e){
+  var a=e.target;
+  if(a!==wrap&&a!==document.body)return;
+  if(!sheet.hidden||!$('pasteSheet').hidden||!ctx.hidden)return;
   var k=e.key;
   if((colSel||rowSel||rng||rects.length)&&(k==='Delete'||k==='Backspace')){e.preventDefault();clearSelected();return;}
   if(colSel||rowSel){
     if(k==='Enter'||k==='F2'||(k.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey)){e.preventDefault();return;}
   }
-  if(k==='ArrowDown'){e.preventDefault();select(sel.r+1,sel.c);}
-  else if(k==='ArrowUp'){e.preventDefault();select(sel.r-1,sel.c);}
-  else if(k==='ArrowLeft'){e.preventDefault();select(sel.r,sel.c-1);}
-  else if(k==='ArrowRight'){e.preventDefault();select(sel.r,sel.c+1);}
-  else if(k==='Enter'||k==='F2'){e.preventDefault();startEdit(false);}
+  if(navKey(e))return;
+  if(k==='Enter'||k==='F2'){e.preventDefault();startEdit(false);}
   else if(k.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey){startEdit(true);}
   else if(k==='Delete'||k==='Backspace'){e.preventDefault();if(getCell(sel.r,sel.c)!=='')setCell(sel.r,sel.c,'');}
 });
@@ -977,6 +1006,7 @@ function setRange(ar,ac,r,c,keep){
   ar=Math.max(0,Math.min(nr-1,ar));r=Math.max(0,Math.min(nr-1,r));
   ac=Math.max(0,Math.min(nc-1,ac));c=Math.max(0,Math.min(nc-1,c));
   if(ar===r&&ac===c){rng=null;select(ar,ac,{noReveal:true,keep:keep});return;}
+  setRangeShown(r);
   rng={r1:Math.min(ar,r),r2:Math.max(ar,r),c1:Math.min(ac,c),c2:Math.max(ac,c)};
   select(ar,ac,{rng:true,noReveal:true,keep:keep});
 }
