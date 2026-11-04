@@ -20,7 +20,7 @@
   --fg:#17202C; --muted:#5C6879;
   --line:#D3D9E2; --line-soft:#E4E8EE;
   --accent:#2349C9; --accent-fg:#FFFFFF; --accent-tint:#E3E9FB; --sel-fill:#EDF2FF;
-  --match:#FFEFAE; --warn:#8F5200; --warn-tint:#FCEBCB; --danger:#B3261E;
+  --match:#FFEFAE; --good:#1B6B3A; --warn:#8F5200; --warn-tint:#FCEBCB; --danger:#B3261E;
   --scrim:rgba(12,16,24,.5); --toast-link:#9DB4FF;
   --font-ui:'IBM Plex Sans','PingFang HK','PingFang TC','Noto Sans HK','Microsoft JhengHei',system-ui,sans-serif;
   --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
@@ -31,7 +31,7 @@
     --fg:#E6EBF2; --muted:#93A0B3;
     --line:#2C3541; --line-soft:#222A34;
     --accent:#8CA6FF; --accent-fg:#0B1224; --accent-tint:#222D4C; --sel-fill:#1E2A4A;
-    --match:#4B4219; --warn:#F0B35C; --warn-tint:#3A2D12; --danger:#FF8F86;
+    --match:#4B4219; --good:#7FD39B; --warn:#F0B35C; --warn-tint:#3A2D12; --danger:#FF8F86;
     --scrim:rgba(0,0,0,.6); --toast-link:#2349C9;
     color-scheme:dark;
   }
@@ -41,7 +41,7 @@
   --fg:#E6EBF2; --muted:#93A0B3;
   --line:#2C3541; --line-soft:#222A34;
   --accent:#8CA6FF; --accent-fg:#0B1224; --accent-tint:#222D4C; --sel-fill:#1E2A4A;
-  --match:#4B4219; --warn:#F0B35C; --warn-tint:#3A2D12; --danger:#FF8F86;
+  --match:#4B4219; --good:#7FD39B; --warn:#F0B35C; --warn-tint:#3A2D12; --danger:#FF8F86;
   --scrim:rgba(0,0,0,.6); --toast-link:#2349C9;
   color-scheme:dark;
 }
@@ -78,6 +78,34 @@ button,label.btn,th,td{touch-action:manipulation}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
 .btn:disabled{opacity:.4;cursor:default}
 .btn:focus-visible,.btn:focus-within,.tb:focus-visible,.nav:focus-visible,.seg button:focus-visible,.lnk:focus-visible,.menu button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* status bar */
+.sbar{flex:none;display:flex;align-items:center;height:28px;padding:0 4px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;font:12px var(--font-mono);color:var(--muted);white-space:nowrap;overflow:hidden}
+.sbar .sg{display:inline-flex;align-items:center;gap:6px;height:100%;padding:0 10px;border-right:1px solid var(--line-soft);min-width:0}
+.sbar .sg:last-child{border-right:0}
+.sbar .sp{flex:1;min-width:0}
+.sbar b{font-weight:500;color:var(--fg)}
+.sbar select{font:inherit;color:var(--muted);background:transparent;border:0;border-radius:4px;padding:2px 2px;margin-left:-4px;cursor:pointer}
+.sbar select:hover{background:var(--line-soft);color:var(--fg)}
+.sbar select:focus-visible{outline:2px solid var(--accent,currentColor)}
+.sbar .ok{color:var(--good)}
+.sbar .warnc{color:var(--warn)}
+
+/* menu bar */
+.bar.mbar{min-height:38px;gap:4px;padding:0 6px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.mbtn{flex:none;min-height:30px;padding:0 10px;border:0;border-radius:7px;background:none;color:var(--fg);font:500 14px var(--font-ui);cursor:pointer}
+.mbtn:hover,.mbtn[aria-expanded="true"]{background:var(--surface-2)}
+.mbtn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mbar .logo{flex:none;margin:0 4px 0 2px}
+.mbar .fname{flex:1;justify-content:center;font-size:14px}
+.dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--warn)}
+.mbar .addr{flex:none;max-width:180px;text-align:right;padding-right:10px;margin-right:2px;border-right:1px solid var(--line)}
+.mbar .meta{margin:0 8px 0 4px}
+.mbar .btn{min-height:30px;padding:0 14px}
+@media (max-width:640px){#sbSel,#sbStats,#sbDim{display:none}}
+.ctx .k{margin-left:auto;padding-left:20px;font:11px var(--font-mono);color:var(--muted)}
+.ctx .ck{flex:none;width:16px;text-align:center;color:var(--accent)}
+.ctx .gl{padding:6px 12px 2px;font-size:11px;letter-spacing:.06em;color:var(--muted)}
 
 /* tool strip */
 .tools{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:1px}
@@ -154,7 +182,7 @@ td.addfill{height:44px;background:var(--surface-2)}
 /* start screen */
 .startscr{display:none;flex:1;min-height:0;align-items:center;justify-content:center}
 .app.start .startscr{display:flex}
-.app.start .bar,.app.start .tools,.app.start .find,.app.start .edit,.app.start .wrap{display:none}
+.app.start .sbar,.app.start .bar,.app.start .tools,.app.start .find,.app.start .edit,.app.start .wrap{display:none}
 .startbox{width:100%;max-width:520px;display:flex;flex-direction:column;align-items:center;gap:28px}
 .sttitle{font-size:20px;font-weight:600;letter-spacing:.04em}
 .stbtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:100%}
@@ -202,36 +230,15 @@ pre.pv{margin:0;padding:10px 12px;max-width:100%;overflow-x:auto;background:var(
 <div class="app" id="app">
   <h1 class="sr">CSV 修改器</h1>
 
-  <header class="bar">
-    <div class="file">
-      <div class="fname"><span class="t" id="fn"></span><span class="badge warn" id="bDirty" hidden>未匯出</span></div>
-      <div class="meta">
-        <span id="mDim"></span><span>·</span>
-        <span class="encw">
-          <button class="lnk" id="encBtn" type="button" aria-haspopup="menu" aria-expanded="false"></button>
-          <div class="menu" id="encMenu" role="menu" hidden>
-            <button type="button" role="menuitemradio" data-enc="auto">自動偵測</button>
-            <button type="button" role="menuitemradio" data-enc="utf-8">UTF-8</button>
-            <button type="button" role="menuitemradio" data-enc="big5">Big5(繁體舊檔)</button>
-            <button type="button" role="menuitemradio" data-enc="gb18030">GB18030(簡體舊檔)</button>
-          </div>
-        </span><span>·</span>
-        <span id="mDelim"></span>
-      </div>
-    </div>
-    <button class="btn" id="newBtn" type="button">新增</button>
-    <label class="btn" id="openLbl">開啟<input class="sr" type="file" id="file" accept=".csv,.tsv,.txt,text/csv,text/plain,application/vnd.ms-excel"></label>
-    <button class="btn primary" id="export" type="button">匯出</button>
+  <header class="bar mbar">
+    <svg class="logo" width="22" height="22" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#F5A524"></rect><rect x="13" y="13" width="38" height="38" rx="7" fill="none" stroke="#17202C" stroke-opacity="0.35" stroke-width="2.4"></rect><circle cx="33" cy="27.5" r="6.2" fill="#17202C"></circle><path d="M33 33.5C33.6 40 30.5 44.4 24.5 46.4" fill="none" stroke="#17202C" stroke-width="6" stroke-linecap="round"></path></svg>
+    <button class="mbtn" type="button" data-menu="file" aria-haspopup="menu" aria-expanded="false">檔案</button>
+    <button class="mbtn" type="button" data-menu="edit" aria-haspopup="menu" aria-expanded="false">編輯</button>
+    <button class="mbtn" type="button" data-menu="view" aria-haspopup="menu" aria-expanded="false">檢視</button>
+    <div class="fname"><span class="t" id="fn"></span><span class="dot" id="bDirty" hidden title="未儲存"></span></div>
+    <input class="sr" type="file" id="file" accept=".csv,.tsv,.txt,text/csv,text/plain,application/vnd.ms-excel">
+    <button class="btn primary" id="saveMain" type="button">儲存</button>
   </header>
-
-  <div class="tools" role="toolbar" aria-label="編輯工具">
-    <button class="tb" id="tUndo" type="button">復原</button>
-    <button class="tb" id="tRedo" type="button">重做</button>
-    <span class="sep"></span>
-    <button class="tb" id="tMulti" type="button" aria-pressed="false">多選</button>
-    <button class="tb" id="tFind" type="button" aria-pressed="false">尋找取代</button>
-    <button class="tb" id="tHdr" type="button" aria-pressed="true">首列為標題</button>
-  </div>
 
   <section class="find" id="findPanel" hidden>
     <div class="line">
@@ -239,6 +246,7 @@ pre.pv{margin:0;padding:10px 12px;max-width:100%;overflow-x:auto;background:var(
       <button class="tb" id="fPrev" type="button" aria-label="上一個">↑</button>
       <button class="tb" id="fNext" type="button" aria-label="下一個">↓</button>
       <span class="cnt" id="fCnt"></span>
+      <button class="tb" id="fClose" type="button" aria-label="關閉尋找">✕</button>
     </div>
     <div class="line">
       <input type="text" id="rep" placeholder="取代為" aria-label="取代為" autocomplete="off" autocapitalize="off" spellcheck="false">
@@ -248,22 +256,23 @@ pre.pv{margin:0;padding:10px 12px;max-width:100%;overflow-x:auto;background:var(
     <label class="chk"><input type="checkbox" id="onlyCol"><span class="chk" style="font-size:13px;color:var(--muted)">全部取代時只改選取的那一欄</span></label>
   </section>
 
-  <section class="edit" aria-label="儲存格編輯">
-    <div class="row1">
-      <div class="addr" id="addr"></div>
-      <button class="nav" id="nLeft" type="button" aria-label="左一格">←</button>
-      <button class="nav" id="nUp" type="button" aria-label="上一格">↑</button>
-      <button class="nav" id="nDown" type="button" aria-label="下一格">↓</button>
-      <button class="nav" id="nRight" type="button" aria-label="右一格">→</button>
-      <button class="done" id="nDone" type="button">完成</button>
-    </div>
-  </section>
-
   <div class="wrap" id="wrap" tabindex="0">
     <table id="tbl" aria-label="CSV 內容"></table>
     <textarea id="ed" rows="1" aria-label="儲存格內容" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
     <div class="kbsp"></div>
   </div>
+
+  <footer class="sbar" id="sbar">
+    <span class="sg" id="sbAddr"></span>
+    <span class="sg" id="sbSel"></span>
+    <span class="sg" id="sbStats" hidden><select id="sbStatSel" aria-label="統計方式"><option value="sum">總計</option><option value="avg">平均</option><option value="cnt">項目</option><option value="max">最大</option><option value="min">最小</option></select><b id="sbStatVal"></b></span>
+    <span class="sp"></span>
+    <span class="sg" id="sbDim"></span>
+    <span class="sg" id="sbEnc"></span>
+    <span class="sg" id="sbDelim"></span>
+    <span class="sg" id="sbSave"></span>
+    <span class="sg" id="sbVer"></span>
+  </footer>
 
   <section class="startscr" id="start" aria-label="開始">
     <div class="startbox">
@@ -274,7 +283,7 @@ pre.pv{margin:0;padding:10px 12px;max-width:100%;overflow-x:auto;background:var(
           <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="6" width="36" height="36" rx="7" fill="none" stroke="currentColor" stroke-width="3"></rect><path d="M6 18h36M6 30h36M18 6v36M30 6v36" fill="none" stroke="currentColor" stroke-width="2" opacity="0.4"></path><path d="M24 17v14M17 24h14" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"></path></svg>
           <span class="bt">新增</span><span class="bs">5 × 5 空白表格</span>
         </button>
-        <label class="bigbtn" for="file">
+        <label class="bigbtn" for="file" id="sOpen">
           <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 14a4 4 0 0 1 4-4h9l4 5h15a4 4 0 0 1 4 4v17a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path></svg>
           <span class="bt">開啟</span><span class="bs">選擇 CSV 檔案</span>
         </label>
@@ -342,7 +351,7 @@ var DELIM_NAME={',':'逗號分隔',';':'分號分隔','\t':'Tab 分隔'};
 
 var app=$('app'), wrap=$('wrap'), tbl=$('tbl'), ed=$('ed'), sheet=$('sheet'), toastEl=$('toast');
 var S=null, undoSt=[], redoSt=[], cleanSet=new WeakSet();
-var sel={r:0,c:0}, internalClip=null, rng=null, rects=[], dragX=0, dragY=0, dragTm=0, multiAnchor=null, drag=null, colSel=false, rowSel=false, selCols=[], selRows=[], anchorC=0, anchorR=0, multi=false, lastHd=null, ctxSwallow=0, shown=PAGE, editTarget=null, composing=false, prevEls=[];
+var sel={r:0,c:0}, internalClip=null, fileHandle=null, fsOK=!!(window.showOpenFilePicker&&window.showSaveFilePicker), mm=null, rng=null, rects=[], dragX=0, dragY=0, dragTm=0, multiAnchor=null, drag=null, colSel=false, rowSel=false, selCols=[], selRows=[], anchorC=0, anchorR=0, multi=false, lastHd=null, ctxSwallow=0, shown=PAGE, editTarget=null, composing=false, prevEls=[];
 var findTerm='', matches=[], matchSet=new Set();
 var dl=null, exportName='', exportFor=null, toastT=0, saveT=0;
 
@@ -754,12 +763,6 @@ ed.addEventListener('keydown',function(e){
     ed.blur();
   }
 });
-$('nLeft').addEventListener('click',function(){move(0,-1,false);});
-$('nRight').addEventListener('click',function(){move(0,1,false);});
-$('nUp').addEventListener('click',function(){move(-1,0,false);});
-$('nDown').addEventListener('click',function(){move(1,0,false);});
-$('nDone').addEventListener('click',function(){commitEdit();ed.blur();});
-['nLeft','nRight','nUp','nDown'].forEach(function(id){$(id).addEventListener('mousedown',function(e){e.preventDefault();});});
 wrap.addEventListener('scroll',function(){if(editing()&&S.hasHeader&&sel.r===0)ed.style.top=wrap.scrollTop+'px';});
 
 tbl.addEventListener('click',function(e){
@@ -909,18 +912,15 @@ function appendCol(){
   var p=tbl.querySelector('thead th.add');
   if(p)revealEl(p);
 }
-$('tUndo').addEventListener('click',undo);
-$('tRedo').addEventListener('click',redo);
-$('tMulti').addEventListener('click',function(){
+function toggleMulti(){
   multi=!multi;multiAnchor=null;wrap.classList.toggle('multi',multi);
-  $('tMulti').setAttribute('aria-pressed',String(multi));
   if(multi)toast('多選已開:手指拖曳或逐格點選範圍(此時畫面不能捲動,用完請關閉)');
-});
-$('tHdr').addEventListener('click',function(){
+}
+function toggleHeader(){
   commitEdit();
   push(Object.assign({},S,{hasHeader:!S.hasHeader}));
   select(sel.r,sel.c,{noReveal:true});
-});
+}
 
 /* ---------- right-click / long-press menu ---------- */
 var ctx=document.createElement('div');
@@ -1256,18 +1256,20 @@ function replaceAll(){
   push(Object.assign({},S,{rows:rows}));
   toast('已取代 '+count+' 處',true);
 }
-$('tFind').addEventListener('click',function(){
-  var p=$('findPanel'),open=p.hidden;
+function toggleFind(open){
+  var p=$('findPanel');
+  if(open===undefined)open=p.hidden;
   p.hidden=!open;
-  $('tFind').setAttribute('aria-pressed',String(open));
-  if(open){$('find').focus();}
+  if(open){$('find').focus();$('find').select();}
   else{findTerm='';$('find').value='';recomputeMatches();render();updateUI();}
-});
+}
+$('fClose').addEventListener('click',function(){toggleFind(false);});
 $('find').addEventListener('input',function(){
   findTerm=$('find').value;recomputeMatches();render();updateUI();
 });
 $('find').addEventListener('keydown',function(e){
   if(e.key==='Enter'){e.preventDefault();gotoMatch(e.shiftKey?-1:1);}
+  else if(e.key==='Escape'){e.preventDefault();toggleFind(false);}
 });
 $('fPrev').addEventListener('click',function(){commitEdit();gotoMatch(-1);});
 $('fNext').addEventListener('click',function(){commitEdit();gotoMatch(1);});
@@ -1275,19 +1277,83 @@ $('fOne').addEventListener('click',replaceOne);
 $('fAll').addEventListener('click',replaceAll);
 
 /* ---------- UI refresh ---------- */
+function numOf(v){
+  if(v==null)return null;
+  var s=String(v).trim().replace(/,/g,'');
+  if(s===''||!/^[-+]?(\d+\.?\d*|\.\d+)$/.test(s))return null;
+  return Number(s);
+}
+function fmtN(x,d){return x.toLocaleString('en-US',{maximumFractionDigits:d});}
+var statM=null;
+function statMode(){if(!statM){var m='sum';try{m=localStorage.getItem('csvStat')||'sum';}catch(e){}statM=/^(sum|avg|cnt|max|min)$/.test(m)?m:'sum';}return statM;}
+$('sbStatSel').addEventListener('change',function(){statM=this.value;try{localStorage.setItem('csvStat',statM);}catch(e){}updateStatus();});
+function updateStatus(){
+  $('sbVer').textContent='v'+APP_VERSION;
+  var rows=S.rows,nr=rows.length,nc=rows[0].length,hdr=S.hasHeader;
+  function rl(r){return hdr?(r===0?'標題':String(r)):String(r+1);}
+  var rs,cs,addr,seltxt='',cellsN=1;
+  if(rowSel){rs=selRows.slice();cs=seq(0,nc-1);}
+  else if(colSel){rs=seq(0,nr-1);cs=selCols.slice();}
+  else if(rects.length||rng){rs=null;}
+  else{rs=[sel.r];cs=[sel.c];}
+  if(rowSel){
+    addr=selRows.length>1?rl(selRows[0])+':'+rl(selRows[selRows.length-1]):'第 '+rl(sel.r)+' 列';
+    seltxt=selRows.length>1?'已選 '+selRows.length+' 列':'整列';
+  }else if(colSel){
+    addr=selCols.length>1?colName(selCols[0])+':'+colName(selCols[selCols.length-1]):colName(sel.c)+' 欄';
+    seltxt=selCols.length>1?'已選 '+selCols.length+' 欄':(hdr&&rows[0][sel.c]!==''?rows[0][sel.c]:'整欄');
+  }else if(rects.length){
+    addr=colName(sel.c)+rl(sel.r);
+    seltxt='已選 '+(rects.length+1)+' 個範圍';
+  }else if(rng){
+    addr=colName(rng.c1)+rl(rng.r1)+':'+colName(rng.c2)+rl(rng.r2);
+    seltxt='已選 '+(rng.r2-rng.r1+1)+' 列 × '+(rng.c2-rng.c1+1)+' 欄';
+  }else{
+    addr=colName(sel.c)+rl(sel.r);
+    seltxt=(hdr&&sel.r>0&&rows[0][sel.c]!=='')?rows[0][sel.c]:(hdr&&sel.r===0?'標題列':'');
+  }
+  var cnt=0,sum=0,total=0,seen=null,i,j,maxv=-Infinity,minv=Infinity;
+  function add(r,c){
+    total++;
+    var x=numOf(rows[r]&&rows[r][c]);
+    if(x!==null){cnt++;sum+=x;if(x>maxv)maxv=x;if(x<minv)minv=x;}
+  }
+  if(rects.length){
+    seen={};
+    allRects().forEach(function(Q){for(i=Q.r1;i<=Q.r2;i++)for(j=Q.c1;j<=Q.c2;j++){var k=i*65536+j;if(!seen[k]){seen[k]=1;add(i,j);}}});
+  }else if(rng){
+    for(i=rng.r1;i<=rng.r2;i++)for(j=rng.c1;j<=rng.c2;j++)add(i,j);
+  }else if(rs){
+    rs.forEach(function(r){cs.forEach(function(c){add(r,c);});});
+  }
+  var st=$('sbStats');
+  if(total>=2&&cnt>=1){
+    var m=statMode(),v;
+    if(m==='cnt')v=fmtN(cnt,0);
+    else if(m==='avg')v=fmtN(sum/cnt,2);
+    else if(m==='max')v=fmtN(maxv,4);
+    else if(m==='min')v=fmtN(minv,4);
+    else v=fmtN(sum,4);
+    $('sbStatSel').value=m;
+    $('sbStatVal').textContent=v;
+    st.hidden=false;
+  }else st.hidden=true;
+  $('sbAddr').innerHTML='<b>'+esc(addr)+'</b>';
+  $('sbSel').textContent=seltxt;
+  $('sbSel').hidden=!seltxt;
+  $('sbDim').textContent=(hdr?(nr-1)+' 列資料':nr+' 列')+' × '+nc+' 欄';
+  $('sbEnc').textContent=S.enc;
+  $('sbDelim').textContent=DELIM_NAME[S.delim]||'';
+  var sv=$('sbSave');
+  if(!cleanSet.has(S)){sv.textContent='● 未儲存';sv.className='sg warnc';}
+  else if(!fileHandle&&S.name==='未命名.csv'){sv.textContent='新檔案';sv.className='sg';}
+  else{sv.textContent='✓ 已儲存';sv.className='sg ok';}
+}
 function updateUI(){
   var rows=S.rows,nc=rows[0].length,hdr=S.hasHeader;
   $('fn').textContent=S.name;
   $('bDirty').hidden=cleanSet.has(S);
-  $('mDim').textContent=(hdr?(rows.length-1)+' 列資料':rows.length+' 列')+' × '+nc+' 欄';
-  $('encBtn').textContent='編碼 '+S.enc+' ▾';
-  $('encBtn').disabled=!S.raw;
-  $('mDelim').textContent=DELIM_NAME[S.delim]||'';
-  $('tUndo').disabled=!undoSt.length;
-  $('tRedo').disabled=!redoSt.length;
-  $('tHdr').setAttribute('aria-pressed',String(hdr));
-  var label=(hdr&&rows[0][sel.c]!=='')?rows[0][sel.c]:colName(sel.c);
-  $('addr').innerHTML=rects.length?'已選 <b>'+(rects.length+1)+'</b> 個範圍':rng?'已選 <b>'+(rng.r2-rng.r1+1)+'</b> 列 × <b>'+(rng.c2-rng.c1+1)+'</b> 欄':rowSel?(selRows.length>1?'已選 <b>'+selRows.length+'</b> 列':'整列 · 第 '+(hdr?sel.r:sel.r+1)+' 列'):colSel?(selCols.length>1?'已選 <b>'+selCols.length+'</b> 欄':'<b>'+esc(label)+'</b> · 整欄(第 '+(sel.c+1)+' 欄)· 雙擊標題改名'):(hdr&&sel.r===0)?'標題列 · 第 '+(sel.c+1)+' 欄':'<b>'+esc(label)+'</b> · 第 '+(hdr?sel.r:sel.r+1)+' 列';
+  updateStatus();
   var cnt='';
   if(findTerm){
     if(!matches.length)cnt='沒有符合';
@@ -1324,10 +1390,10 @@ function blankState(){
 }
 function newBlank(){
   commitEdit();
+  fileHandle=null;
   openState(blankState());
   toast('已新增 5 × 5 空白表格',true);
 }
-$('newBtn').addEventListener('click',newBlank);
 $('sNew').addEventListener('click',newBlank);
 function loadBuffer(buf,name,choice){
   var d=decodeBuf(buf,choice),delim=detectDelim(d.text);
@@ -1337,45 +1403,169 @@ function loadBuffer(buf,name,choice){
     bom:d.bom||/Big5|GB18030|UTF-16/.test(d.label),hasHeader:guessHeader(rows)
   }));
 }
-async function openFile(f){
+async function openFile(f,handle){
   try{
     var buf=await readFile(f);
     loadBuffer(buf,f.name,'auto');
-    toast('已開啟 '+f.name,true);
+    fileHandle=handle||null;
+    updateUI();
   }catch(err){toast('讀取不到這個檔案。');}
 }
+async function openPicker(){
+  if(fsOK&&window.showOpenFilePicker){
+    try{
+      var hs=await window.showOpenFilePicker({types:[{description:'CSV / 文字檔',accept:{'text/csv':['.csv','.tsv'],'text/plain':['.txt']}}]});
+      var f=await hs[0].getFile();
+      await openFile(f,hs[0]);
+      return;
+    }catch(err){
+      if(err&&err.name==='AbortError')return;
+      fsOK=false;
+    }
+  }
+  $('file').click();
+}
+$('sOpen').addEventListener('click',function(e){
+  if(fsOK&&window.showOpenFilePicker){e.preventDefault();openPicker();}
+});
 $('file').addEventListener('change',function(e){
   var f=e.target.files&&e.target.files[0];
-  if(f)openFile(f);
+  if(f)openFile(f,null);
   e.target.value='';
 });
 window.addEventListener('dragover',function(e){e.preventDefault();});
 window.addEventListener('drop',function(e){
   e.preventDefault();
+  var it=e.dataTransfer&&e.dataTransfer.items&&e.dataTransfer.items[0];
+  if(it&&it.getAsFileSystemHandle){
+    it.getAsFileSystemHandle().then(function(h){
+      if(h&&h.kind==='file')return h.getFile().then(function(f){return openFile(f,h);});
+    }).catch(function(){});
+    return;
+  }
   var f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];
-  if(f)openFile(f);
+  if(f)openFile(f,null);
 });
 
-var encMenu=$('encMenu'),encBtn=$('encBtn');
-function closeMenu(){encMenu.hidden=true;encBtn.setAttribute('aria-expanded','false');}
-encBtn.addEventListener('click',function(e){
-  e.stopPropagation();
+/* ---------- save to the original file ---------- */
+function csvText(){return (S.bom?'\ufeff':'')+buildCSV(S.rows,S.delim,S.eol);}
+async function writeHandle(h){
+  var w=await h.createWritable();
+  await w.write(csvText());
+  await w.close();
+}
+async function saveFile(){
+  commitEdit();
+  if(!fileHandle){saveAs();return;}
+  try{
+    var h=fileHandle,perm='granted';
+    if(h.queryPermission)perm=await h.queryPermission({mode:'readwrite'});
+    if(perm!=='granted'&&h.requestPermission)perm=await h.requestPermission({mode:'readwrite'});
+    if(perm!=='granted'){toast('未獲允許寫入原檔,儲存失敗。');return;}
+    await writeHandle(h);
+    cleanSet.add(S);updateUI();scheduleSave();
+    if(!/^UTF-8/.test(S.enc))toast('原檔編碼是 '+S.enc+',已用 UTF-8 儲存。');
+  }catch(err){toast('儲存失敗:'+((err&&err.message)||err));}
+}
+async function saveAs(){
+  commitEdit();
+  if(fsOK&&window.showSaveFilePicker){
+    try{
+      var h=await window.showSaveFilePicker({suggestedName:S.name,types:[{description:'CSV',accept:{'text/csv':['.csv']}}]});
+      await writeHandle(h);
+      fileHandle=h;
+      if(h.name)S.name=h.name;
+      cleanSet.add(S);updateUI();scheduleSave();
+      return;
+    }catch(err){
+      if(err&&err.name==='AbortError')return;
+      fsOK=false;
+    }
+  }
+  openSheet();
+}
+
+/* ---------- menu bar ---------- */
+mm=document.createElement('div');
+mm.className='ctx';mm.hidden=true;mm.setAttribute('role','menu');
+app.appendChild(mm);
+var mmOpen=null;
+function closeMM(){
+  mm.hidden=true;mmOpen=null;
+  Array.prototype.forEach.call(document.querySelectorAll('.mbtn'),function(b){b.setAttribute('aria-expanded','false');});
+}
+function closeMenu(){closeMM();}
+function reenc(val){
   if(!S.raw)return;
-  var open=encMenu.hidden;
-  Array.prototype.forEach.call(encMenu.querySelectorAll('button'),function(b){
-    b.setAttribute('aria-checked',String(b.dataset.enc===S.encChoice));
-  });
-  encMenu.hidden=!open;
-  encBtn.setAttribute('aria-expanded',String(open));
-});
-encMenu.addEventListener('click',function(e){
-  var b=e.target.closest('button[data-enc]');
-  if(!b||!S.raw)return;
-  closeMenu();
-  loadBuffer(S.raw,S.name,b.dataset.enc);
+  loadBuffer(S.raw,S.name,val);
   toast('已用 '+S.enc+' 重新讀取',true);
+}
+var APP_VERSION='1.0.0',APP_BUILD='2026-11-04';
+function menuItems(name){
+  if(name==='file'){
+    var encs=[['自動偵測','auto'],['UTF-8','utf-8'],['Big5(繁體舊檔)','big5'],['GB18030(簡體舊檔)','gb18030']];
+    var out=[
+      ['新增空白表格',newBlank,false,''],
+      ['開啟檔案…',openPicker,false,'Ctrl+O'],0,
+      ['儲存',saveFile,false,'Ctrl+S'],
+      ['另存新檔…',saveAs,false,'Ctrl+Shift+S'],
+      ['匯出…(分隔符號、BOM)',openSheet,false,''],0,
+      {g:'編碼(目前 '+S.enc+')'}
+    ];
+    encs.forEach(function(e){out.push([e[0],function(){reenc(e[1]);},!S.raw,'',S.raw&&S.encChoice===e[1]]);});
+    out.push(0,{g:'CSV 修改器 v'+APP_VERSION+'('+APP_BUILD+')'});
+    return out;
+  }
+  if(name==='edit')return [
+    ['復原',undo,!undoSt.length,'Ctrl+Z'],
+    ['重做',redo,!redoSt.length,'Ctrl+Y'],0,
+    ['複製',copySel,false,'Ctrl+C'],
+    ['貼上',pasteFromClipboard,false,'Ctrl+V'],
+    ['清除內容',clearSelected,false,'Delete'],0,
+    ['尋找取代…',function(){toggleFind(true);},false,'Ctrl+F']
+  ];
+  return [
+    ['首列為標題',toggleHeader,false,'',S.hasHeader],
+    ['多選模式(觸控拖曳用)',toggleMulti,false,'',multi]
+  ];
+}
+function openMM(name,btn){
+  commitEdit();ed.blur();closeCtx();
+  closeMM();
+  mmOpen=name;
+  btn.setAttribute('aria-expanded','true');
+  mm.textContent='';
+  menuItems(name).forEach(function(it){
+    if(!it){var s=document.createElement('div');s.className='sx';mm.appendChild(s);return;}
+    if(!Array.isArray(it)){var g=document.createElement('div');g.className='gl';g.textContent=it.g;mm.appendChild(g);return;}
+    var b=document.createElement('button');
+    b.type='button';b.setAttribute('role','menuitem');b.disabled=!!it[2];
+    var ck=document.createElement('span');ck.className='ck';ck.textContent=it[4]?'✓':'';
+    var lb=document.createElement('span');lb.textContent=it[0];
+    b.appendChild(ck);b.appendChild(lb);
+    if(it[3]){var k=document.createElement('span');k.className='k';k.textContent=it[3];b.appendChild(k);}
+    b.addEventListener('click',function(){closeMM();it[1]();});
+    mm.appendChild(b);
+  });
+  mm.hidden=false;
+  var r=btn.getBoundingClientRect(),w=mm.offsetWidth;
+  mm.style.left=Math.max(8,Math.min(r.left,window.innerWidth-w-8))+'px';
+  mm.style.top=(r.bottom+4)+'px';
+}
+Array.prototype.forEach.call(document.querySelectorAll('.mbtn'),function(b){
+  b.addEventListener('click',function(){
+    if(mmOpen===b.dataset.menu){closeMM();return;}
+    openMM(b.dataset.menu,b);
+  });
+  b.addEventListener('mouseenter',function(){
+    if(mmOpen&&mmOpen!==b.dataset.menu)openMM(b.dataset.menu,b);
+  });
 });
-document.addEventListener('click',function(e){if(!encMenu.hidden&&!e.target.closest('.encw'))closeMenu();});
+document.addEventListener('pointerdown',function(e){
+  if(!mm.hidden&&!e.target.closest('.ctx,.mbtn'))closeMM();
+},true);
+window.addEventListener('resize',closeMM);
+$('saveMain').addEventListener('click',saveFile);
 
 /* ---------- export ---------- */
 function defaultOut(name){
@@ -1410,7 +1600,6 @@ function openSheet(){
   $('sheetBox').focus();
 }
 function closeSheet(){sheet.hidden=true;}
-$('export').addEventListener('click',openSheet);
 $('sClose').addEventListener('click',closeSheet);
 sheet.addEventListener('click',function(e){if(e.target===sheet)closeSheet();});
 $('fname').addEventListener('input',function(){exportName=$('fname').value;refreshSheet();});
@@ -1480,11 +1669,15 @@ function restoreDraft(){
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){
     if(!sheet.hidden){closeSheet();return;}
-    if(!encMenu.hidden){closeMenu();return;}
+    if(!mm.hidden){closeMM();return;}
     if(!ctx.hidden){closeCtx();return;}
     if(!$('pasteSheet').hidden){$('pasteSheet').hidden=true;return;}
   }
   if((e.metaKey||e.ctrlKey)&&!e.altKey){
+    var k0=e.key.toLowerCase();
+    if(k0==='s'){e.preventDefault();if(e.shiftKey)saveAs();else saveFile();return;}
+    if(k0==='o'){e.preventDefault();openPicker();return;}
+    if(k0==='f'){e.preventDefault();toggleFind(true);return;}
     var t=e.target;
     if(t&&(t.tagName==='TEXTAREA'||t.tagName==='INPUT'))return;
     var k=e.key.toLowerCase();
